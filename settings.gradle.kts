@@ -20,5 +20,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "playground-logger"
-include(":app")
+include(":logger")
  
