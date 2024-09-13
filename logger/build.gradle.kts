@@ -1,19 +1,25 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.jetbrainsKotlinAndroid)
+    id(libs.plugins.maven.publish.get().pluginId)
 }
 
 android {
-    namespace = "com.playground.looger"
+    namespace = "com.playground.logger"
     compileSdk = 34
 
     defaultConfig {
         minSdk = 24
-        targetSdk = 34
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -24,11 +30,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 
@@ -40,4 +43,45 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+}
+
+tasks.register<Jar>("androidSourcesJar") {
+    archiveClassifier.set("sources")
+    from(android.sourceSets)
+}
+
+publishing {
+
+    repositories {
+        maven {
+            val keyPropertiesFile = rootProject.file("local.properties")
+            val keyProperties = Properties()
+            keyProperties.load(FileInputStream(keyPropertiesFile))
+
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/nalivajr/modules-playground-logger")
+            credentials {
+                username = keyProperties.get("GIT_USER").toString()
+                password = keyProperties.get("GIT_TOKEN").toString()
+            }
+        }
+    }
+
+    val aarGroupId = "com.example.playground"
+    val aarVersionName = "1.0.0-SHAPSHOT"
+
+    val arrArtifactId = "logger"
+
+    publications {
+        create<MavenPublication>("MavenPublication") {
+            groupId = aarGroupId
+            artifactId = arrArtifactId
+            artifact("build/outputs/aar/$arrArtifactId-release.aar")
+            pom {
+                name = "playground-logger"
+                description = "Playground Logger library"
+                version = aarVersionName
+            }
+        }
+    }
 }
