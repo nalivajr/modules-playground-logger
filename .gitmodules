@@ -1,0 +1,3 @@
+[submodule "gradle"]
+	path = gradle
+	url = git@personal.github.com:nalivajr/modules-playground-version-catalogue.git
