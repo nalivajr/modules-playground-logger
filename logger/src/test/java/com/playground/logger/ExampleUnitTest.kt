@@ -1,4 +1,4 @@
-package com.playground.looger
+package com.playground.logger
 
 import org.junit.Test
 

@@ -3,6 +3,7 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.library)
+    id(libs.plugins.kotlin.android.library.get().pluginId)
     id(libs.plugins.maven.publish.get().pluginId)
 }
 
@@ -48,6 +49,7 @@ dependencies {
 tasks.register<Jar>("androidSourcesJar") {
     archiveClassifier.set("sources")
     from(android.sourceSets)
+    from(java.sourceSets)
 }
 
 publishing {
@@ -68,7 +70,7 @@ publishing {
     }
 
     val aarGroupId = "com.example.playground"
-    val aarVersionName = "1.0.0-SHAPSHOT"
+    val aarVersionName = "1.0.0-SNAPSHOT"
 
     val arrArtifactId = "logger"
 
@@ -76,11 +78,11 @@ publishing {
         create<MavenPublication>("MavenPublication") {
             groupId = aarGroupId
             artifactId = arrArtifactId
+            version = aarVersionName
             artifact("build/outputs/aar/$arrArtifactId-release.aar")
             pom {
                 name = "playground-logger"
                 description = "Playground Logger library"
-                version = aarVersionName
             }
         }
     }
