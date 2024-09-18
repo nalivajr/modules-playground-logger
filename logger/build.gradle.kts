@@ -70,7 +70,7 @@ publishing {
     }
 
     val aarGroupId = "com.example.playground"
-    val aarVersionName = "1.0.0-SNAPSHOT"
+    val aarVersionName = "1.0.1-SNAPSHOT"
 
     val arrArtifactId = "logger"
 
